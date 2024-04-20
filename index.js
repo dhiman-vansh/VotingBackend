@@ -85,7 +85,19 @@ app.get("/results", async(req, res) => {
         { $limit: 1 } // Get only the first candidate (with maximum votes)
     ]);
 
-    res.json(candidateWithMaxVotes);
+    // Calculate total number of votes cast
+    const totalVotes = await Candidate.aggregate([
+        { $group: { _id: null, totalVotes: { $sum: "$votes" } } }
+    ]);
+
+    // Calculate the percentage of votes the winning candidate received
+    const percentageWin = (candidateWithMaxVotes[0].votes / totalVotes[0].totalVotes) * 100;
+
+    res.json({
+        name: candidateWithMaxVotes[0].name,
+        img: candidateWithMaxVotes[0].img,
+        percentageWin: percentageWin.toFixed(2) // Round to 2 decimal places
+    });
 } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
