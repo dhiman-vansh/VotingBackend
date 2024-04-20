@@ -26,6 +26,7 @@ app.get("/", async(req, res) => {
     const candidates =  await Candidate.find(); 
     res.json(candidates);
 });
+
 app.post("/", async(req, res) => {
     const candidate = new Candidate({
       name: req.body.name,
@@ -65,6 +66,33 @@ app.put("/:sr", async(req, res) => {
   }
 
 });
+
+app.get("/reset", async(req, res) => {
+  try{
+    await Candidate.updateMany({}, {votes: 0});
+    res.send("Reset Done");
+  }
+  catch(err){
+    res.status(400).json("error in sending data");
+  }
+});
+
+app.get("/results", async(req, res) => {
+  try {
+    // Find the candidate with the maximum number of votes
+    const candidateWithMaxVotes = await Candidate.aggregate([
+        { $sort: { votes: -1 } }, // Sort candidates by votes in descending order
+        { $limit: 1 } // Get only the first candidate (with maximum votes)
+    ]);
+
+    res.json(candidateWithMaxVotes);
+} catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+}
+});
+
+
 app.listen(3001, () => {
   console.log("Server is running on port 3001");
 });
