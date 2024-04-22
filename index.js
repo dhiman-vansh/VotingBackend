@@ -47,7 +47,7 @@ app.put("/:sr", async(req, res) => {
   const srNo = req.params.sr;
   const name = req.body.name;
   // const nameExists = checkIfNameExists(name, namesArray);
-  if(namesArray.includes(name.toLowerCase())){
+  if(namesArray.includes(name.toUpperCase())){
     res.send("PUT hit "+srNo+" "+name);
     
     try{
