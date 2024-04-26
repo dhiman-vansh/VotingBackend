@@ -5,7 +5,6 @@ const Candidate = require("./models/Candidate");
 const app = express();
 const namelist = require("./models/namelist.json");
 const namesArray = namelist.map(item => item.name)
-console.log(namesArray)
 
 
 function checkIfNameExists(nameToCheck, namesArray) {
@@ -46,6 +45,7 @@ app.put("/:sr", async(req, res) => {
 
   const srNo = req.params.sr;
   const name = req.body.name;
+  console.log(name, "in put");
   // const nameExists = checkIfNameExists(name, namesArray);
   if(namesArray.includes(name.toUpperCase())){
     res.send("PUT hit "+srNo+" "+name);
