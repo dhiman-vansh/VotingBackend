@@ -26,20 +26,20 @@ app.get("/", async(req, res) => {
     res.json(candidates);
 });
 
-app.post("/", async(req, res) => {
-    const candidate = new Candidate({
-      name: req.body.name,
-      img: req.body.img,
-      description: req.body.description,
-    });
+// app.post("/", async(req, res) => {
+//     const candidate = new Candidate({
+//       name: req.body.name,
+//       img: req.body.img,
+//       description: req.body.description,
+//     });
   
-    try {
-      const newCandidate = await candidate.save();
-      res.status(201).json(newCandidate);
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
-});
+//     try {
+//       const newCandidate = await candidate.save();
+//       res.status(201).json(newCandidate);
+//     } catch (error) {
+//       res.status(400).json({ message: error.message });
+//     }
+// });
 
 app.put("/:sr", async(req, res) => {
 
@@ -84,7 +84,7 @@ app.get("/results", async(req, res) => {
         { $sort: { votes: -1 } }, // Sort candidates by votes in descending order
         { $limit: 1 } // Get only the first candidate (with maximum votes)
     ]);
-
+    console.log(candidateWithMaxVotes);
     // Calculate total number of votes cast
     const totalVotes = await Candidate.aggregate([
         { $group: { _id: null, totalVotes: { $sum: "$votes" } } }
